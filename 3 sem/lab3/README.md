@@ -1,0 +1,1 @@
+Download SFML and TGUI lib for this to work
