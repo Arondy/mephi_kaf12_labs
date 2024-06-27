@@ -4,4 +4,3 @@ git pull
 git add .
 git commit -m "def"
 git push
-pause
