@@ -15,6 +15,7 @@ int isJpegFile(const char *filename) {
 }
 
 //extern void mirrorImage(int width, int height, int channels, unsigned char *data);
+
 void mirrorImage(int width, int height, int channels, unsigned char *data){
     for (int y = 0; y < height; ++y){               // y - строка
         for (int x = 0; x < width / 2; ++x){        // x - столбец
@@ -28,6 +29,7 @@ void mirrorImage(int width, int height, int channels, unsigned char *data){
         }
     }
 }
+
 
 int main(int argc, char *argv[]){
     if (argc < 3){
@@ -47,22 +49,22 @@ int main(int argc, char *argv[]){
         printf("Error: Output file must be a JPEG file.\n");
         return 1;
     }
+	
+	int width, height, channels;
+	unsigned char *data = stbi_load(input_filename, &width, &height, &channels, 0);
 
-    int width, height, channels;
-    unsigned char *data = stbi_load(input_filename, &width, &height, &channels, 0);
-
-    if (!data){
-        printf("Error loading image\n");
-        return 1;
-    }
+	if (!data){
+		printf("Error loading image\n");
+		return 1;
+	}
 
 	clock_t t1 = clock();
 	mirrorImage(width, height, channels, data);
 	clock_t t2 = clock();
 	printf("%lf\n", ((double) (t2 - t1)) / CLOCKS_PER_SEC);
-	stbi_write_jpg(output_filename, width, height, channels, data, width * channels);
-	stbi_image_free(data);
+	//stbi_write_jpg(output_filename, width, height, channels, data, width * channels);
+	//stbi_image_free(data);
 
-    printf("Image saved to %s\n", output_filename);
+	//printf("Image saved to %s\n", output_filename);
     return 0;
 }
