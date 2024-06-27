@@ -62,9 +62,9 @@ int main(int argc, char *argv[]){
 	mirrorImage(width, height, channels, data);
 	clock_t t2 = clock();
 	printf("%lf\n", ((double) (t2 - t1)) / CLOCKS_PER_SEC);
-	//stbi_write_jpg(output_filename, width, height, channels, data, width * channels);
-	//stbi_image_free(data);
+	stbi_write_jpg(output_filename, width, height, channels, data, width * channels);
+	stbi_image_free(data);
 
-	//printf("Image saved to %s\n", output_filename);
+	printf("Image saved to %s\n", output_filename);
     return 0;
 }
