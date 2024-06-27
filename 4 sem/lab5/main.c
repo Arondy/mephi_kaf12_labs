@@ -4,6 +4,8 @@
 #include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
 
+#include <time.h>
+
 int isJpegFile(const char *filename) {
     const char *extensionJPG = ".jpg";
     const char *extensionJPEG = ".jpeg";
@@ -12,20 +14,20 @@ int isJpegFile(const char *filename) {
     return (resultJPG != NULL) || (resultJPEG != NULL);
 }
 
-extern void mirrorImage(int width, int height, int channels, unsigned char *data);
-//void mirrorImage(int width, int height, int channels, unsigned char *data){
-//    for (int y = 0; y < height; ++y){               // y - строка
-//        for (int x = 0; x < width / 2; ++x){        // x - столбец
-//            for (int c = 0; c < channels; ++c){
-//                int left_index = (y * width + x) * channels + c;
-//                int right_index = (y * width + (width - 1 - x)) * channels + c;
-//                unsigned char temp = data[left_index];
-//                data[left_index] = data[right_index];
-//                data[right_index] = temp;
-//            }
-//        }
-//    }
-//}
+//extern void mirrorImage(int width, int height, int channels, unsigned char *data);
+void mirrorImage(int width, int height, int channels, unsigned char *data){
+    for (int y = 0; y < height; ++y){               // y - строка
+        for (int x = 0; x < width / 2; ++x){        // x - столбец
+            for (int c = 0; c < channels; ++c){
+                int left_index = (y * width + x) * channels + c;
+                int right_index = (y * width + (width - 1 - x)) * channels + c;
+                unsigned char temp = data[left_index];
+                data[left_index] = data[right_index];
+                data[right_index] = temp;
+            }
+        }
+    }
+}
 
 int main(int argc, char *argv[]){
     if (argc < 3){
@@ -54,10 +56,12 @@ int main(int argc, char *argv[]){
         return 1;
     }
 
-    mirrorImage(width, height, channels, data);
-
-    stbi_write_jpg(output_filename, width, height, channels, data, width * channels);
-    stbi_image_free(data);
+	clock_t t1 = clock();
+	mirrorImage(width, height, channels, data);
+	clock_t t2 = clock();
+	printf("%lf\n", ((double) (t2 - t1)) / CLOCKS_PER_SEC);
+	stbi_write_jpg(output_filename, width, height, channels, data, width * channels);
+	stbi_image_free(data);
 
     printf("Image saved to %s\n", output_filename);
     return 0;
